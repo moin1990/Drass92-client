@@ -1,0 +1,223 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ═══════════════════════════════════════════════════════════════
+   CSS CUSTOM PROPERTIES
+   Both :root (light) and .dark (dark) are defined here.
+   Tailwind reads these via hsl(var(--xxx)) in tailwind.config.js.
+   The values use HSL *without* the hsl() wrapper so Tailwind can
+   compose them: color: hsl(var(--primary) / 0.5)
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Light theme (default) ─────────────────────────────────── */
+:root {
+  /* Core surfaces */
+  --background: 0 0% 100%;
+  --foreground: 224 71.4% 4.1%;
+
+  /* Cards & popovers */
+  --card       : 0 0% 100%;
+  --card-foreground: 224 71.4% 4.1%;
+  --popover    : 0 0% 100%;
+  --popover-foreground: 224 71.4% 4.1%;
+
+  /* Brand — violet-600 */
+  --primary           : 262.1 83.3% 57.8%;
+  --primary-foreground: 210 20% 98%;
+
+  /* Secondary — slate-100 */
+  --secondary           : 220 14.3% 95.9%;
+  --secondary-foreground: 220.9 39.3% 11%;
+
+  /* Muted — slate-100 */
+  --muted           : 220 14.3% 95.9%;
+  --muted-foreground: 220 8.9% 46.1%;
+
+  /* Accent — same as secondary in light */
+  --accent           : 220 14.3% 95.9%;
+  --accent-foreground: 220.9 39.3% 11%;
+
+  /* Destructive — red-500 */
+  --destructive           : 0 84.2% 60.2%;
+  --destructive-foreground: 210 20% 98%;
+
+  /* Chrome */
+  --border: 220 13% 91%;
+  --input : 220 13% 91%;
+  --ring  : 262.1 83.3% 57.8%;
+
+  /* Border radius */
+  --radius: 0.5rem;
+
+  /* Scrollbar */
+  --scrollbar-thumb : 262 40% 70%;
+  --scrollbar-track : 220 14% 96%;
+}
+
+/* ── Dark theme ─────────────────────────────────────────────── */
+.dark {
+  /* Core surfaces — near-black with a violet tint */
+  --background: 222 47% 5%;
+  --foreground: 210 20% 96%;
+
+  /* Cards — slightly lighter than background */
+  --card           : 222 47% 7.5%;
+  --card-foreground: 210 20% 96%;
+  --popover        : 222 47% 7%;
+  --popover-foreground: 210 20% 96%;
+
+  /* Brand — violet-500 (slightly lighter for dark bg contrast) */
+  --primary           : 263.4 70% 60%;
+  --primary-foreground: 210 20% 98%;
+
+  /* Secondary — dark blue-grey */
+  --secondary           : 217 33% 14%;
+  --secondary-foreground: 210 20% 92%;
+
+  /* Muted */
+  --muted           : 217 33% 13%;
+  --muted-foreground: 215 16% 54%;
+
+  /* Accent */
+  --accent           : 217 33% 15%;
+  --accent-foreground: 210 20% 92%;
+
+  /* Destructive — dark red */
+  --destructive           : 0 63% 42%;
+  --destructive-foreground: 210 20% 98%;
+
+  /* Chrome */
+  --border: 217 33% 16%;
+  --input : 217 33% 16%;
+  --ring  : 263.4 70% 60%;
+
+  /* Scrollbar */
+  --scrollbar-thumb : 263 30% 40%;
+  --scrollbar-track : 222 47% 9%;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BASE LAYER
+═══════════════════════════════════════════════════════════════ */
+@layer base {
+
+  /* Box-sizing reset */
+  *,
+  *::before,
+  *::after {
+    @apply border-border box-border;
+  }
+
+  /* Body — background + text + antialiasing */
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: 'rlig' 1, 'calt' 1;
+    /* Smooth theme transitions — only for color-related properties */
+    transition:
+      background-color 300ms ease,
+      color            200ms ease,
+      border-color     200ms ease;
+  }
+
+  /*
+   * Prevent the transition flash on first paint.
+   * The inline <script> in index.html sets the class before React
+   * hydrates, so body.no-transition disables animation for ~100ms.
+   */
+  body.no-transition,
+  body.no-transition * {
+    transition: none !important;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+    /* Prevent layout shift from scrollbar appearing */
+    scrollbar-gutter: stable;
+  }
+
+  /* Typography baseline */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-extrabold tracking-tight;
+  }
+
+  /* Focus ring — visible without mouse */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CUSTOM SCROLLBAR
+   Applies to webkit (Chrome, Safari, Edge) via CSS.
+   Firefox uses scrollbar-color (standard property).
+═══════════════════════════════════════════════════════════════ */
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--scrollbar-thumb)) hsl(var(--scrollbar-track));
+}
+
+/* Webkit */
+::-webkit-scrollbar {
+  width : 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(var(--scrollbar-track));
+}
+::-webkit-scrollbar-thumb {
+  background   : hsl(var(--scrollbar-thumb));
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.7);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   COMPONENT UTILITIES
+═══════════════════════════════════════════════════════════════ */
+@layer utilities {
+
+  /* Text clamping */
+  .line-clamp-2 {
+    display           : -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow          : hidden;
+  }
+  .line-clamp-3 {
+    display           : -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow          : hidden;
+  }
+
+  /* Glass morphism surface */
+  .glass {
+    background: hsl(var(--background) / 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-violet-500 to-purple-600 bg-clip-text text-transparent;
+  }
+
+  /* Subtle dot grid background (used in hero / banners) */
+  .dot-grid {
+    background-image: radial-gradient(
+      circle,
+      hsl(var(--primary) / 0.25) 1px,
+      transparent 1px
+    );
+    background-size: 28px 28px;
+  }
+
+  /* Hide scrollbar visually but keep it functional */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+}

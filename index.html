@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💡</text></svg>"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="IdeaVault – Share, discover, and validate startup ideas with a global community of innovators."
+    />
+    <meta name="theme-color" content="#7c3aed" />
+    <title>IdeaVault</title>
+
+    <!--
+      ════════════════════════════════════════════════════════════
+      FLASH-PREVENTION SCRIPT
+      ────────────────────────────────────────────────────────────
+      Runs BEFORE React hydrates and BEFORE any CSS is parsed.
+      Reads the saved theme from localStorage and applies the
+      correct class to <html> instantly — no flicker on reload.
+
+      1. Read theme from localStorage (default: 'light').
+      2. Add class to <html> before paint.
+      3. Add 'no-transition' to <body> for ~100 ms so the initial
+         paint does not animate in — then remove it.
+      ════════════════════════════════════════════════════════════
+    -->
+    <script>
+      (function () {
+        var STORAGE_KEY = 'ideavault-theme';
+        var theme;
+
+        try {
+          theme = localStorage.getItem(STORAGE_KEY);
+        } catch (_) {
+          theme = null;
+        }
+
+        // Validate — only 'dark' or 'light' are valid
+        if (theme !== 'dark' && theme !== 'light') {
+          // Honour OS preference as secondary fallback
+          theme =
+            window.matchMedia &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light';
+        }
+
+        // Apply to <html> immediately
+        document.documentElement.classList.remove('dark', 'light');
+        document.documentElement.classList.add(theme);
+
+        // Suppress transition flash for the first ~100 ms
+        document.addEventListener('DOMContentLoaded', function () {
+          document.body.classList.add('no-transition');
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+              document.body.classList.remove('no-transition');
+            });
+          });
+        });
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
