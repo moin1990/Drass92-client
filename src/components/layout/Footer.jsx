@@ -19,7 +19,7 @@ const CATEGORY_LINKS = [
 ]
 
 const SocialIcon = ({ href, label, children }) => (
-  
+  <a
     href={href}
     target="_blank"
     rel="noopener noreferrer"
